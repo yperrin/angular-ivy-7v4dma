@@ -1,0 +1,15 @@
+mat-toolbar {
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  gap: 10px;
+  span.content {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.mat-form-field {
+  font-size: 0.8em;
+}

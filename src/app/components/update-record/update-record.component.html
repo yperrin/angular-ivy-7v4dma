@@ -1,0 +1,55 @@
+<h1>Update records</h1>
+<div class="content" *ngIf="master$ | async as master; else noMaster">
+  <p>
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Enter a PGUID" [(ngModel)]="userEnteredPGUID" />
+      <mat-hint>Enter record you want to interact with</mat-hint> </mat-form-field
+    >&nbsp;
+    <button mat-button mat-raised-button color="primary" (click)="add(master)">Add</button>
+    &nbsp;<span><em>tombstone</em> urn:deals:132448, <em>active</em> urn:deals:132454</span>
+  </p>
+  <table mat-table [dataSource]="(records$ | async) || []" aria-label="List of records entered by the user">
+    <ng-container matColumnDef="pguid">
+      <th mat-header-cell *matHeaderCellDef>PGUID</th>
+      <td mat-cell *matCellDef="let record">{{ record.pguid }}</td>
+    </ng-container>
+    <ng-container matColumnDef="tombstone">
+      <th mat-header-cell *matHeaderCellDef>Tombstone</th>
+      <td mat-cell *matCellDef="let record" [ngSwitch]="record.itemStatus">
+        <span *ngSwitchCase="-99">The record is tombstoned</span>
+        <span *ngSwitchCase="-1">The record is tombstoned</span>
+        <span *ngSwitchCase="0">The record is active</span>
+        <span *ngSwitchCase="1">The record is linkstoned</span>
+        <span *ngSwitchCase="2">The record is work in progress</span>
+        <span *ngSwitchCase="3">The record is published</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="statusUpdate">
+      <th mat-header-cell *matHeaderCellDef>Update</th>
+      <td mat-cell *matCellDef="let record">
+        <span *ngIf="record.itemStatus === -1"><button mat-button mat-raised-button color="primary" (click)="makeActive(master, record.pguid)">Make active</button></span>
+        <span *ngIf="record.itemStatus >= 0"><button mat-button mat-raised-button color="primary" (click)="tombstone(master, record.pguid)">Tombstone</button></span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="lockUpdate">
+      <th mat-header-cell *matHeaderCellDef>Lock</th>
+      <td mat-cell *matCellDef="let record">
+        <span *ngIf="record.lockUser.length === 0">The record is not locked</span>
+        <span *ngIf="record.lockUser.length > 0"><button mat-button mat-raised-button color="primary" (click)="unlock(master, record.pguid, record.lockUser)">Unlock</button></span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let record">
+        <button mat-icon-button aria-label="Remove from list" (click)="remove(record.pguid)">
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['pguid', 'tombstone', 'statusUpdate', 'lockUpdate', 'delete']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['pguid', 'tombstone', 'statusUpdate', 'lockUpdate', 'delete']"></tr>
+  </table>
+</div>
+<ng-template #noMaster>
+  <p>You need to select a master and an environment before you can update any records.</p>
+</ng-template>

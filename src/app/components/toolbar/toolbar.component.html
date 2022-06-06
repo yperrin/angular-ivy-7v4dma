@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+  <span class="title"> Singularity Tool </span>
+  <span class="content">
+    <span>
+      <mat-form-field>
+        <mat-label>Select the Environment</mat-label>
+        <mat-select (valueChange)="selectMaster('dummy')">
+          <mat-option value="dummy">dummy</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+    <span>
+      <mat-form-field>
+        <mat-label>Select the master</mat-label>
+        <mat-select (valueChange)="selectMaster('dummy')">
+          <mat-option value="dummy">dummy</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+  </span>
+</mat-toolbar>
